@@ -18,7 +18,7 @@ public class EventSelection {
 				PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
 				ResultSet resultSet = preparedStatement.executeQuery();
 
-				System.out.println("Available Events:");
+				System.out.println("Available Event(s):");
 				System.out.println("=====================================================================");
 				System.out.printf("| %-8s | %-30s | %-10s | %-8s |\n", "Event ID", "Event Name", "Date", "Time");
 				System.out.println("=====================================================================");
