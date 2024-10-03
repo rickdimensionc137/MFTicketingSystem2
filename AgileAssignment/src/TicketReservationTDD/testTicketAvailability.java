@@ -15,8 +15,8 @@ public class testTicketAvailability {
 	@Test
 	public void testNonExistentTicket() {
 	    // Assuming ticket ID 999 does not exist in the database.
-		// Expect 0 when ticket doesn't exist
-	    assertEquals(0, manageEvents.checkTicketAvailability(999));  
+		// Expect -1 when ticket doesn't exist
+	    assertEquals(-1, manageEvents.checkTicketAvailability(999));  
 	}
 	
 	@Test
