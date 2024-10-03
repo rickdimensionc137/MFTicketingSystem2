@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
+
+import org.w3c.dom.events.Event;
 
 public class EventSelection {
 	// Method to display available events
@@ -322,5 +325,7 @@ public class EventSelection {
 			System.out.println("Unable to connect to the database.");
 		}
 	}
+
+	
 
 }

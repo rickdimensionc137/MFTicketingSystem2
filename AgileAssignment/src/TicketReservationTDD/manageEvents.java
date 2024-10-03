@@ -45,5 +45,33 @@ public class manageEvents {
 	    return availability;  // Returns 0 if ticket ID doesn't exist or availability from DB
 	}
 
+	public static int updateTicketAvailability(int ticketId) {
+		Connection connection = database_connection.connect();
 
+		if (connection != null) {
+			String updateSQL = "UPDATE Tickets SET availability = availability - 1 WHERE ticket_id = ? AND availability > 0";
+
+			try {
+				PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
+				preparedStatement.setInt(1, ticketId);
+				int rowsUpdated = preparedStatement.executeUpdate();
+
+				if (rowsUpdated > 0) {
+					System.out.println("Ticket availability updated successfully.");
+				} else {
+					System.out.println("Error: Unable to update ticket availability.");
+				}
+				return rowsUpdated;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				database_connection.disconnect();
+
+			}
+			return -1;
+		}
+		return -1;
+
+	}
+    
 }
