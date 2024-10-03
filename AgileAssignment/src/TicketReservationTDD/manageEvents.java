@@ -8,17 +8,9 @@ import java.sql.SQLException;
 import MFTicketReservation.database_connection;
 
 public class manageEvents {
-	
-//	public static int checkTicketAvailability(int ticketId) {
-//	    // Simulate database check
-//	    if (ticketId == 999) {
-//	        return 0;  // Ticket not found
-//	    }
-//	    return 50;  // Existing ticket
-//	}
 	public static int checkTicketAvailability(int ticketId) {
 	    Connection connection = database_connection.connect();
-	    int availability = 0;
+	    int availability = -1;
 
 	    if (connection != null) {
 	        String querySQL = "SELECT availability FROM Tickets WHERE ticket_id = ?";
@@ -32,8 +24,9 @@ public class manageEvents {
 	            if (resultSet.next()) {
 	                availability = resultSet.getInt("availability");
 	            } else {
-	                // Ticket ID doesn't exist, return 0 availability
-	                availability = 0;
+	                // Ticket ID doesn't exist, return -1 availability
+	                availability = -1;
+	                System.out.println("Invalid input. Please enter a valid Ticket ID.");
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
@@ -42,8 +35,10 @@ public class manageEvents {
 	        }
 	    }
 
-	    return availability;  // Returns 0 if ticket ID doesn't exist or availability from DB
+	    return availability;  // Returns -1 if ticket ID doesn't exist or availability from DB
 	}
+	
+	
 
 
 }
