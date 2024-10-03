@@ -110,6 +110,6 @@ public class manageEvents {
 //		}
 //		return false;
 //	}
-}}
+
 
 }
