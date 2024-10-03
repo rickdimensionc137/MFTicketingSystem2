@@ -254,6 +254,7 @@ public class EventSelection {
 
 		if (connection != null) {
 			String insertSQL = "INSERT INTO Reservations (event_id, ticket_id, customer_id) VALUES (?, ?, ?)";
+
 			try {
 				PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
 				preparedStatement.setInt(1, eventId);

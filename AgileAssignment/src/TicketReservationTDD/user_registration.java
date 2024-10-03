@@ -1,6 +1,7 @@
 package TicketReservationTDD;
 
 public class user_registration {
+	
 	  private static final int MIN_LENGTH = 8;
 	    private static final String SPECIAL_CHARACTERS = "!@#$%^&*";
 
