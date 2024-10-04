@@ -194,4 +194,110 @@ public class manageEvents {
 			System.out.println("Unable to connect to the database.");
 		}
 	}
+
+	public static boolean selectEvent(int customer_id) {
+		Scanner event_scanner = new Scanner(System.in);
+		System.out.print("\nEnter the Event ID to select an event: ");
+
+		if (event_scanner.hasNextInt()) {
+			int eventId = event_scanner.nextInt();
+
+			Connection connection = database_connection.connect();
+			if (connection != null) {
+				String querySQL = "SELECT * FROM Events WHERE event_id = ?";
+
+				try {
+					PreparedStatement preparedStatement = connection.prepareStatement(querySQL);
+					preparedStatement.setInt(1, eventId);
+					ResultSet resultSet = preparedStatement.executeQuery();
+
+					if (resultSet.next()) {
+						String eventName = resultSet.getString("event_name");
+						String eventDate = resultSet.getDate("event_date").toString();
+						String eventTime = resultSet.getTime("event_time").toString();
+
+						// Display the selected event details
+						System.out.println("\nYou have selected the following event:");
+						System.out.println("==========================================================");
+						System.out.printf("| %-30s | %-10s | %-8s |\n", eventName, eventDate, eventTime);
+						System.out.println("==========================================================");
+
+						// Display ticket options for the selected event
+						displayTicketOptions(eventId, customer_id);
+						return true;
+					} else {
+						System.out.println("Invalid Event ID. No event found with this ID.");
+					}
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					database_connection.disconnect();
+				}
+			} else {
+				System.out.println("Unable to connect to the database.");
+			}
+		} else {
+			System.out.println("Invalid input. Please enter a valid Event ID.");
+		}
+		return false;
+
+	}
+	
+	private static void displayTicketOptions(int eventId, int customer_id) {
+		Connection connection = database_connection.connect();
+		if (connection != null) {
+			// Get the event name
+			String getEventNameSQL = "SELECT event_name FROM Events WHERE event_id = ?";
+			String eventName = "";
+
+			try {
+				PreparedStatement eventStatement = connection.prepareStatement(getEventNameSQL);
+				eventStatement.setInt(1, eventId);
+				ResultSet eventResultSet = eventStatement.executeQuery();
+				if (eventResultSet.next()) {
+					eventName = eventResultSet.getString("event_name");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			// Display ticket options
+			String querySQL = "SELECT * FROM Tickets WHERE event_id = ?";
+
+			try {
+				PreparedStatement preparedStatement = connection.prepareStatement(querySQL);
+				preparedStatement.setInt(1, eventId);
+				ResultSet resultSet = preparedStatement.executeQuery();
+
+				System.out.println("\nAvailable Ticket Options for " + eventName + ":");
+				System.out.println("===================================================================");
+				System.out.printf("| %-8s | %-20s | %-10s | %-15s |\n", "Ticket ID", "Ticket Type", "Price($)",
+						"Availability");
+				System.out.println("==================================================================");
+
+				while (resultSet.next()) {
+					int ticketId = resultSet.getInt("ticket_id");
+					String ticketType = resultSet.getString("ticket_type");
+					double price = resultSet.getDouble("price");
+					int availability = resultSet.getInt("availability");
+
+					System.out.printf("| %-8d | %-20s | $%-9.2f | %-15d |\n", ticketId, ticketType, price,
+							availability);
+				}
+
+				System.out.println("==================================================================");
+
+				// Allow the user to select a ticket
+				selectTicket(eventId, eventName, customer_id);
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				database_connection.disconnect();
+			}
+		} else {
+			System.out.println("Unable to connect to the database.");
+		}
+	}
 }
