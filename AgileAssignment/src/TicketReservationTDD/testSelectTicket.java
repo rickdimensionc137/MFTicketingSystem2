@@ -7,8 +7,9 @@ import org.junit.Test;
 public class testSelectTicket {
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testSelectTicket() {
+		assertTrue(manageEvents.selectTicket(3, "BTS Special Stage", 1005));
 	}
 
+	
 }
