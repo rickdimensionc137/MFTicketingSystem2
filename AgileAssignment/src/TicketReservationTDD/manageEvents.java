@@ -97,12 +97,6 @@ public class manageEvents {
 		}
 		return false;
 	}
-//	public static boolean saveReservation(int eventId, String eventName, int ticketId, int customer_id) {
-//		if (eventId == 3 && eventName.equals("BTS Special Stage") && ticketId == 11 && customer_id == 1004) {
-//			return true;
-//		}
-//		return false;
-//	}
 
 	public static boolean selectTicket(int eventId, String eventName, int customer_id) {
 		Scanner ticketScanner = new Scanner(System.in);
@@ -300,4 +294,43 @@ public class manageEvents {
 			System.out.println("Unable to connect to the database.");
 		}
 	}
+
+	public static void displayEvents() {
+		Connection connection = database_connection.connect();
+
+		if (connection != null) {
+			String selectSQL = "SELECT * FROM Events";
+
+			try {
+				PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
+				ResultSet resultSet = preparedStatement.executeQuery();
+
+				System.out.println("Available Event(s):");
+				System.out.println("=====================================================================");
+				System.out.printf("| %-8s | %-30s | %-10s | %-8s |\n", "Event ID", "Event Name", "Date", "Time");
+				System.out.println("=====================================================================");
+
+				while (resultSet.next()) {
+					int eventId = resultSet.getInt("event_id");
+					String eventName = resultSet.getString("event_name");
+					String eventDate = resultSet.getDate("event_date").toString();
+					String eventTime = resultSet.getTime("event_time").toString();
+
+					// Print formatted event data
+					System.out.printf("| %-8d | %-30s | %-10s | %-8s |\n", eventId, eventName, eventDate, eventTime);
+				}
+
+				System.out.println("=====================================================================");
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				database_connection.disconnect();
+			}
+		} else {
+			System.out.println("Unable to connect to the database.");
+		}
+	}
+
+	
 }

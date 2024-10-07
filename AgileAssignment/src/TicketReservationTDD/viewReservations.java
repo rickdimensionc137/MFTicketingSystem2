@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import MFTicketReservation.database_connection;
 
 public class viewReservations {
-	public static boolean viewCustomerReservations(String eventName, String eventDate, String eventTime, String ticketType, double price, int customer_id) {
+	public static boolean viewCustomerReservations(int customer_id) {
 		Connection connection = database_connection.connect();
 
         if (connection != null) {
@@ -33,16 +33,15 @@ public class viewReservations {
                     System.out.println("=====================================================================");
 
                     while (resultSet.next()) {
-                        eventName = resultSet.getString("event_name");
-                        eventDate = resultSet.getDate("event_date").toString();
-                        eventTime = resultSet.getTime("event_time").toString();
-                        ticketType = resultSet.getString("ticket_type");
-                        price = resultSet.getDouble("price");
+                    	String eventName = resultSet.getString("event_name");
+                        String eventDate = resultSet.getDate("event_date").toString();
+                        String eventTime = resultSet.getTime("event_time").toString();
+                        String ticketType = resultSet.getString("ticket_type");
+                        double price = resultSet.getDouble("price");
 
                         System.out.printf("| %-30s | %-10s | %-8s | %-10s | %-6.2f |\n", 
                                           eventName, eventDate, eventTime, ticketType, price);
                     }
-
                 }
 
             } catch (SQLException e) {

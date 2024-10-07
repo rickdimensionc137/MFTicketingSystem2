@@ -4,52 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import MFTicketReservation.database_connection;
 
 public class userRegister {
-	
-//	public static int registerUser() {
-//		return 1004;
-//	}
-	
-//	public static int registerUser(String name, String email, String password) {
-//		if(Pattern.compile("^[A-Za-z][A-Za-z ]{1,24}$").matcher(name).matches()) {
-//			if(Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$").matcher(email).matches()) {
-//				if(Pattern.compile("^(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$").matcher(password).matches()) {
-//					Connection connection = database_connection.connect();
-//
-//					if (connection != null) {
-//						String querySQL = "SELECT COUNT(*) FROM customer WHERE email = ?";
-//
-//						try {
-//							PreparedStatement preparedStatement = connection.prepareStatement(querySQL);
-//							preparedStatement.setString(1, email);
-//
-//							ResultSet resultSet = preparedStatement.executeQuery();
-//							if (resultSet.next()) {
-//								if( resultSet.getInt(1) == 0) {
-//									return -1;// Return 1005 (dummy value) if count > 0
-//								} 
-//								else {
-//									return 1005;
-//								}
-//							}
-//						} catch (SQLException e) {
-//							e.printStackTrace();
-//						} finally {
-//							database_connection.disconnect();
-//						}
-//					}
-//					return -1;
-//				}
-//				return -1;
-//			}
-//			return -1;
-//		}		
-//		return -1;
-//	}
 
 	public static int registerUser(String name, String email, String password) {
 		if(Pattern.compile("^[A-Za-z][A-Za-z ]{1,24}$").matcher(name).matches()) {
@@ -59,11 +19,11 @@ public class userRegister {
 						int customer_id = saveCustomerToDatabase(name, email, password);
 						return customer_id;
 					}
-					return -1;
+					return -4;
 				}
-				return -1;
+				return -3;
 			}
-			return -1;
+			return -2;
 		}		
 		return -1;
 	}
@@ -102,7 +62,6 @@ public class userRegister {
 	            database_connection.disconnect();
 	        }
 	    }
-	    
 	    return customerId;
 	}
 	
@@ -126,8 +85,48 @@ public class userRegister {
 				database_connection.disconnect();
 			}
 		}
-
 		return false; // Email does not exist
 	}
+
+	public static int processRegisterUser() {
+		Scanner scanner = new Scanner(System.in);
+		int customerId = -1; // Default value if registration fails
+
+		String name = "";
+		String email = "";
+		String password = "";
+		
+		System.out.print("Enter your name : ");
+		name = scanner.nextLine();
+		
+		System.out.print("Enter your email: ");
+		email = scanner.nextLine();
+		
+		System.out.print(
+				"Enter your password (minimum 8 characters, at least one digit, and one special character): ");
+		password = scanner.nextLine();
+		
+		customerId = registerUser(name, email, password);
+		
+		while((customerId != -1) && (customerId != -2)&& (customerId != -3)&& (customerId != -4)){
+			if (registerUser(name, email, password)== -1) {
+				System.out.println("Invalid name. Please re-enter: ");
+				System.out.print("Enter your name : ");
+				name = scanner.nextLine();
+			} else if(registerUser(name, email, password)== -2) {
+				System.out.println("Invalid email. Please re-enter: ");
+				System.out.print("Enter your email : ");
+				email = scanner.nextLine();
+			}else if(registerUser(name, email, password)== -3) {
+				System.out.println("Invalid password. Please re-enter (minimum 8 characters, at least one digit, and one special character): ");
+				System.out.print("Enter your password : ");
+				password = scanner.nextLine();
+			}else if (registerUser(name, email, password)== -4) {
+				System.out.println("Email already exists.");
+			}			
+		}
+		return customerId;
+	}
+	
 
 }
