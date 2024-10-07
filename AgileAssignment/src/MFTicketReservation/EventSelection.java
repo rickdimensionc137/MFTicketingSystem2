@@ -97,7 +97,7 @@ public class EventSelection {
 	}
 
 	// Method to display ticket options for the selected event
-	private static void displayTicketOptions(int eventId, int customer_id) {
+	public static void displayTicketOptions(int eventId, int customer_id) {
 		Connection connection = database_connection.connect();
 		if (connection != null) {
 			// Get the event name
@@ -154,76 +154,78 @@ public class EventSelection {
 		}
 	}
 
-	private static void selectTicket(int eventId, String eventName, int customer_id) {
+	public static void selectTicket(int eventId, String eventName, int customer_id) {
 		Scanner ticketScanner = new Scanner(System.in);
 		System.out.print("\nEnter the Ticket ID to select: ");
 
 		if (ticketScanner.hasNextInt()) {
 			int ticketId = ticketScanner.nextInt();
-			
+
 			// Check ticket availability
-	        int availability = checkTicketAvailability(ticketId);
-	        
-	        if (availability > 0) {
-	            System.out.println("You have selected Ticket ID " + ticketId + " for Event: " + eventName);
-	            System.out.println("Do you wish to proceed to checkout?");
-	            System.out.println("1. Yes");
-	            System.out.println("2. No");
-	            
-	            int checkoutChoice = ticketScanner.nextInt();
+			int availability = checkTicketAvailability(ticketId);
 
-			    if (checkoutChoice == 1) {
-				   // Proceed with checkout, save the reservation to the database
-				   saveReservation(eventId, eventName, ticketId, customer_id);
-				   
-				   // Decrease ticket availability by 1
-	               updateTicketAvailability(ticketId);
+			if (availability > 0) {
+				System.out.println("You have selected Ticket ID " + ticketId + " for Event: " + eventName);
+				System.out.println("Do you wish to proceed to checkout?");
+				System.out.println("1. Yes");
+				System.out.println("2. No");
 
-				   // Display the reservation details
-				   displayReservationDetails(eventId, eventName, ticketId, customer_id);
+				int checkoutChoice = ticketScanner.nextInt();
 
-			    } else if (checkoutChoice == 2) {
-				  System.out.println("You have cancelled the reservation.");
-			    } else {
-				  System.out.println("Invalid choice. Please select 1 for Yes or 2 for No."); 
-			    }
-	        } else {
-	            System.out.println("Sorry, the selected ticket is not available.");
-	            System.out.println("Please select another ticket.");
-	        }
-		 } else {
-		        System.out.println("Invalid input. Please enter a valid Ticket ID.");
-		    }
+				if (checkoutChoice == 1) {
+					// Proceed with checkout, save the reservation to the database
+					saveReservation(eventId, eventName, ticketId, customer_id);
+
+					// Decrease ticket availability by 1
+					updateTicketAvailability(ticketId);
+
+					// Display the reservation details
+					displayReservationDetails(eventId, eventName, ticketId, customer_id);
+
+				} else if (checkoutChoice == 2) {
+					System.out.println("You have cancelled the reservation.");
+				} else {
+					System.out.println("Invalid choice. Please select 1 for Yes or 2 for No.");
+				}
+			} else {
+				System.out.println("Sorry, the selected ticket is not available.");
+				System.out.println("Please select another ticket.");
+			}
+		} else {
+
+			System.out.println("Invalid input. Please enter a valid Ticket ID.");
+
+		}
 
 	}
-	
+
 	// Method to update ticket availability
-	private static void updateTicketAvailability(int ticketId) {
-	    Connection connection = database_connection.connect();
+	public static void updateTicketAvailability(int ticketId) {
+		Connection connection = database_connection.connect();
 
-	    if (connection != null) {
-	        String updateSQL = "UPDATE Tickets SET availability = availability - 1 WHERE ticket_id = ? AND availability > 0";
+		if (connection != null) {
+			String updateSQL = "UPDATE Tickets SET availability = availability - 1 WHERE ticket_id = ? AND availability > 0";
 
-	        try {
-	            PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
-	            preparedStatement.setInt(1, ticketId);
-	            int rowsUpdated = preparedStatement.executeUpdate();
+			try {
+				PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
+				preparedStatement.setInt(1, ticketId);
+				int rowsUpdated = preparedStatement.executeUpdate();
 
-	            if (rowsUpdated > 0) {
-	                System.out.println("Ticket availability updated successfully.");
-	            } else {
-	                System.out.println("Error: Unable to update ticket availability.");
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        } finally {
-	            database_connection.disconnect();
-	        }
-	    }
+				if (rowsUpdated > 0) {
+					System.out.println("Ticket availability updated successfully.");
+				} else {
+					System.out.println("Error: Unable to update ticket availability.");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				database_connection.disconnect();
+			}
+		}
 	}
 
 	// Method to check ticket availability
-	private static int checkTicketAvailability(int ticketId) {
+	public static int checkTicketAvailability(int ticketId) {
 		Connection connection = database_connection.connect();
 		int availability = 0;
 
@@ -249,7 +251,7 @@ public class EventSelection {
 	}
 
 	// Method to save the reservation in the database
-	private static void saveReservation(int eventId, String eventName, int ticketId, int customer_id) {
+	public static void saveReservation(int eventId, String eventName, int ticketId, int customer_id) {
 		Connection connection = database_connection.connect();
 
 		if (connection != null) {
@@ -278,7 +280,7 @@ public class EventSelection {
 	}
 
 	// Method to display reservation details
-	private static void displayReservationDetails(int eventId, String eventName, int ticketId, int customer_id) {
+	public static void displayReservationDetails(int eventId, String eventName, int ticketId, int customer_id) {
 		Connection connection = database_connection.connect();
 
 		if (connection != null) {
@@ -325,7 +327,5 @@ public class EventSelection {
 			System.out.println("Unable to connect to the database.");
 		}
 	}
-
-	
 
 }

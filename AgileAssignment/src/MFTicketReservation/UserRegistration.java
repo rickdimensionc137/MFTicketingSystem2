@@ -85,7 +85,7 @@ public class UserRegistration {
 	}
 
 	// Method to check if an email already exists in the database
-	private static boolean emailExists(String email) {
+	public static boolean emailExists(String email) {
 		Connection connection = database_connection.connect();
 
 		if (connection != null) {
