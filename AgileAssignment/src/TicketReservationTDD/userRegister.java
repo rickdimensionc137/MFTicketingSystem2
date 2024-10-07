@@ -15,7 +15,7 @@ public class userRegister {
 		if(Pattern.compile("^[A-Za-z][A-Za-z ]{1,24}$").matcher(name).matches()) {
 			if(Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$").matcher(email).matches()) {
 				if(Pattern.compile("^(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$").matcher(password).matches()) {
-					if(!emailExists(name)) {
+					if(!emailExists(email)) {
 						int customer_id = saveCustomerToDatabase(name, email, password);
 						return customer_id;
 					}
@@ -108,21 +108,32 @@ public class userRegister {
 		
 		customerId = registerUser(name, email, password);
 		
-		while((customerId != -1) && (customerId != -2)&& (customerId != -3)&& (customerId != -4)){
-			if (registerUser(name, email, password)== -1) {
+		while((customerId == -1) || (customerId == -2)|| (customerId == -3)|| (customerId == -4)){
+			if (customerId == -1) {
 				System.out.println("Invalid name. Please re-enter: ");
 				System.out.print("Enter your name : ");
 				name = scanner.nextLine();
-			} else if(registerUser(name, email, password)== -2) {
+				customerId = registerUser(name, email, password);
+			} else if(customerId == -2) {
 				System.out.println("Invalid email. Please re-enter: ");
 				System.out.print("Enter your email : ");
 				email = scanner.nextLine();
-			}else if(registerUser(name, email, password)== -3) {
+				customerId = registerUser(name, email, password);
+			}else if(customerId == -3) {
 				System.out.println("Invalid password. Please re-enter (minimum 8 characters, at least one digit, and one special character): ");
 				System.out.print("Enter your password : ");
 				password = scanner.nextLine();
-			}else if (registerUser(name, email, password)== -4) {
+				customerId = registerUser(name, email, password);
+			}else if (customerId == -4) {
 				System.out.println("Email already exists.");
+				System.out.print("Enter your name : ");
+				name = scanner.nextLine();				
+				System.out.print("Enter your email: ");
+				email = scanner.nextLine();				
+				System.out.print(
+						"Enter your password (minimum 8 characters, at least one digit, and one special character): ");
+				password = scanner.nextLine();				
+				customerId = registerUser(name, email, password);
 			}			
 		}
 		return customerId;
